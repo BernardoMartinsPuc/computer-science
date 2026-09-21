@@ -1,4 +1,7 @@
-import Java.util.Scanner;
+import java.util.Scanner;
+import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 class Veiculo {
 	
@@ -7,7 +10,7 @@ class Veiculo {
 	private String modelo;
 	private int ano;
 	private String categoria;
-	private String combustivel;
+	private String[] combustivel;
 	private int cilindros;
 	private double cilindradas;
 	private String transmissao;
@@ -61,38 +64,27 @@ class Veiculo {
 		this.categoria = categoria;
 	}
 
-	public String getCombustivel(){
-
-		String string[] = combustivel.split (";");
-		if (string.length == 3){
-			String mensagem = String.format ("[%s,%s,%s]", string[0], string [1], string [2]);
-		}
-		if (string.length == 2){
-			String mensagem = String.format ("[%s,%s]", string[0], string [1]);
-		}
-		if (string.length == 1){
-			String mensagem = String.format ("[%s]", string[0]); 
-		}	
-		return mensagem;
+	public String[] getCombustivel(){
+		return combustivel;
 	}
 
-	public void setCombustivel(String combustivel){
+	public void setCombustivel(String[] combustivel){
 		this.combustivel = combustivel;
 	}
 
 	public int getCilindros(){
-		return cilindro;
+		return cilindros;
 	}
 
-	public void setCilindro(int cilindro){
-		this.cilindro = cilindro;
+	public void setCilindros(int cilindros){
+		this.cilindros = cilindros;
 	}	
 	
 	public double getCilindradas(){
 		return cilindradas;
 	}
 
-	public void setCilindradadas(double cilindradas){
+	public void setCilindradas(double cilindradas){
 		this.cilindradas = cilindradas;
 	}
 
@@ -100,7 +92,7 @@ class Veiculo {
 		return transmissao;
 	}
 
-	public void setTransmissao (String trasmissao){
+	public void setTransmissao (String transmissao){
 		this.transmissao = transmissao;
 	}
 
@@ -112,7 +104,7 @@ class Veiculo {
 		this.tracao = tracao;
 	}
 
-	public double getCosumoCidade(){
+	public double getConsumoCidade(){
 		return consumoCidade;
 	}
 
@@ -129,7 +121,7 @@ class Veiculo {
 	}
 
 	public double getCo2(){
-		return co2
+		return co2;
 	}
 
 	public void setCo2(double co2){
@@ -158,12 +150,12 @@ class Veiculo {
 		Data dataRegistro = Data.parseData(dados[14]);
 		Veiculo carro = new Veiculo();
 
-		caroo.setId (Integer.parseInt (dados[0]));
+		carro.setId (Integer.parseInt (dados[0]));
 	        carro.setMarca (dados[1]);
 		carro.setModelo (dados[2]);
 		carro.setAno (Integer.parseInt (dados[3]));
 		carro.setCategoria (dados[4]);
-		carro.setCombustivel(dado[5]);
+		carro.setCombustivel(dados[5].split(";"));
 		carro.setCilindros (Integer.parseInt (dados[6]));
 		carro.setCilindradas (Double.parseDouble(dados[7]));
 		carro.setTransmissao (dados[8]);
@@ -178,10 +170,24 @@ class Veiculo {
 	}
 
 	public String format () {
+
+		String strCombustivel = "[";
+
+   		 for (int i = 0; i < combustivel.length; i++) {
+
+   	     		 strCombustivel += combustivel[i];
+
+       			 if (i < combustivel.length - 1) {
+
+           		 strCombustivel += ",";
+       			 }
+   		 }
+
+   		 strCombustivel += "]";
 	
-		String mensagem = String.format("[%d ## %s ## %s ## %d ## %s ## %s ## %d ## %.2f ## %s ## %s ## %.2f ## %.2f ## %.2f ## %b ## %s]",
-    getId(), getMarca(), getModelo(), getAno(), getCategoria(), getCombustivel(), getCilindros(), getCilindradas(), 
-    getTransmissao(), getTracao(), getConsumoCidade(), getConsumoEstrada(), getCO2(), getTurbo(), getData().format());
+		String mensagem = String.format(Locale.US, "[%d ## %s ## %s ## %d ## %s ## %s ## %d ## %.1f ## %s ## %s ## %.2f ## %.2f ## %.1f ## %b ## %s]",
+    getId(), getMarca(), getModelo(), getAno(), getCategoria(), strCombustivel, getCilindros(), getCilindradas(), 
+    getTransmissao(), getTracao(), getConsumoCidade(), getConsumoEstrada(), getCo2(), getTurbo(), getData().format());
 		
 		return mensagem;
 	}
@@ -196,7 +202,7 @@ class Data {
 	public Data(){
 	}
 
-	public Data (int ano; int mes; int dia){
+	public Data (int ano, int mes, int dia){
 		this.ano = ano;
 		this.mes = mes;
 		this.dia = dia; 
@@ -252,39 +258,60 @@ class LeitorCsv{
 	
 	public static Veiculo[] ler(String caminhoArquivo){
 
-		Veiculo conjunto[] = new Veiculo[500];
+	Veiculo conjunto[] = new Veiculo[500];
 
-		for (int i = 0; i < 500; i++){
+	try {
+		File arquivo = new File(caminhoArquivo);
+		Scanner scanner = new Scanner (arquivo);
 		
-			conjunto[i] = Veiculo.veiculoParse(string)
+		if (scanner.hasNextLine()){
+			scanner.nextLine();
 		}
+			
+		for (int i = 0; i < 500; i++){
+			
+			if(scanner.hasNextLine()){
+		
+				String string = scanner.nextLine();
+				conjunto[i] = Veiculo.parseVeiculo(string);
+			}
+		}	
+	
 	}
-}
+
+	catch (FileNotFoundException e){
+		System.out.println ("Erro ao abrir o arquivo" + caminhoArquivo);
+	}
+
+	return conjunto;
+	}
+}	
 
 
 public class Tp2Q1 {
 	
 	public static void main (String []args){
-	
-		Veiculos carros5[500] = new Veiculo[500];
-		carros[] = LeitorCsv.ler(caminho);	
-		Scanner scanner = new Scanner (System.in);
+
+		Veiculo carros[] = new Veiculo[500];
+		carros = LeitorCsv.ler("/tmp/veiculos.csv");	
+		Scanner scan = new Scanner (System.in);
+
 		int vetor[] = new int[60];
-		int num = scan.nextLine();
+		int num = Integer.parseInt (scan.nextLine());
 		int i = 0;
 
 		while ( num != -1 ){
 
-		vetor [i] = num
-		i++;
-		num = scan.nextLine():
+			vetor [i] = num;
+			i++;
+			num = Integer.parseInt (scan.nextLine());
 		}
 	
 		for (int j = 0; j < 60 ; j++){
 		
 			for (int k = 0; k < 500; k++){
 			
-				if (carros.id[k] == vetor[j]){
+				if (carros[k].getId() == vetor[j]){
 					
 					System.out.println (carros[k].format());	
 				}
