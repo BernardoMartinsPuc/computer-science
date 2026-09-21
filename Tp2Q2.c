@@ -3,15 +3,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-typedef struct
-{
+typedef struct{
     int ano;
     int mes;
     int dia;
 } Data;
 
-typedef struct
-{
+typedef struct{
     int id;
     char marca[100];
     char modelo[100];
@@ -30,16 +28,14 @@ typedef struct
     Data dataRegistro;
 } Veiculo;
 
-Data parseData(char *s)
-{
+Data parseData(char *s){
 
     Data data;
     sscanf(s, "%d-%d-%d", &data.ano, &data.mes, &data.dia);
     return data;
 }
 
-void formatData(Data data, char *resultado)
-{
+void formatData(Data data, char *resultado){
 
     sprintf(resultado, "%02d/%02d/%04d", data.dia, data.mes, data.ano);
 }
@@ -73,8 +69,7 @@ Veiculo *parseVeiculo(char *s){
     char *partes = strtok(combTemp, ";");
     carro -> numCombustivel = 0;
 
-    while (partes != NULL)
-    {
+    while (partes != NULL){
         sprintf(carro -> combustivel[carro -> numCombustivel], "%s", partes);
         carro -> numCombustivel++;
         partes = strtok(NULL, ";");
