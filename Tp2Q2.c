@@ -66,15 +66,6 @@ Veiculo *parseVeiculo(char *s){
     char combTemp[100];
     sprintf(combTemp, "%s", dados);
 
-    char *partes = strtok(combTemp, ";");
-    carro -> numCombustivel = 0;
-
-    while (partes != NULL){
-        sprintf(carro -> combustivel[carro -> numCombustivel], "%s", partes);
-        carro -> numCombustivel++;
-        partes = strtok(NULL, ";");
-    }
-
     dados = strtok(NULL, ",");
     sscanf(dados, "%d", &carro -> cilindros);
 
@@ -108,6 +99,15 @@ Veiculo *parseVeiculo(char *s){
     dados[10] = '\0';
 
     carro -> dataRegistro = parseData(dados);
+
+    char *partes = strtok(combTemp, ";");
+    carro -> numCombustivel = 0;
+
+    while (partes != NULL){
+          sprintf(carro -> combustivel[carro -> numCombustivel], "%s", partes);
+          carro -> numCombustivel++;
+          partes = strtok(NULL, ";");
+    }
 
     return carro; 
 }
