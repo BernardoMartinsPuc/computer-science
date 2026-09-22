@@ -185,9 +185,9 @@ void selecao(Veiculo* carros, int n){
 
 		for (int j = i + 1; j < n; j++){
 		
-			int resp = strcmp(carros[menor].modelo, carros[j].modelo);
+			int resp = strcasecmp(carros[j].modelo, carros[menor].modelo);
 
-			if (resp < 0){
+			if (resp < 0 || (resp == 0 && carros[j].id < carros[menor].id) ){
 				menor = j;
 			}
 		}
@@ -197,7 +197,7 @@ void selecao(Veiculo* carros, int n){
                 carros[menor] = tmp;	
 	}
 
-	for (int i = n - 1; i >= 0; i--){
+	for (int i = 0; i < n; i++){
 		
 		formatVeiculo(&carros[i], res);
 		printf ("%s\n", res);	
