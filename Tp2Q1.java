@@ -295,8 +295,9 @@ public class Tp2Q1 {
 		Veiculo carros[] = new Veiculo[500];
 		carros = LeitorCsv.ler("/tmp/veiculos.csv");	
 		Scanner scan = new Scanner (System.in);
+		int contador = 0;
 
-		int vetor[] = new int[60];
+		int vetor[] = new int[500];
 		int num = Integer.parseInt (scan.nextLine());
 		int i = 0;
 
@@ -305,9 +306,10 @@ public class Tp2Q1 {
 			vetor [i] = num;
 			i++;
 			num = Integer.parseInt (scan.nextLine());
+			contador++;
 		}
 	
-		for (int j = 0; j < 60 ; j++){
+		for (int j = 0; j < contador ; j++){
 		
 			for (int k = 0; k < 500; k++){
 			
