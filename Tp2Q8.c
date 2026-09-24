@@ -186,10 +186,9 @@ void selecao(Veiculo* carros, int n){
 		for (int j = i + 1; j < n; j++){
 		
 			int resp = strcasecmp(carros[j].modelo, carros[menor].modelo);
-
-			if (resp < 0 || (resp == 0 && carros[j].id < carros[menor].id) ){
-				menor = j;
-			}
+			if (resp < 0) {
+       			 	menor = j;
+    			}
 		}
 
 		tmp = carros[i];
@@ -206,13 +205,13 @@ bool pesquisaBinaria (Veiculo* carros, char* modelo, int n){
 	
 		meio = (dir + esq) / 2;
 		
-		if (strcmp (carros[meio].modelo, modelo) == 0){
+		if (strcasecmp (carros[meio].modelo, modelo) == 0){
 			return true;
 		} 
-	       	if (strcmp (carros[meio].modelo, modelo) < 0){
-			dir = meio - 1;
-		} else {
+		else if (strcasecmp (carros[meio].modelo, modelo) < 0){
 			esq = meio + 1;
+		} else {
+			dir = meio - 1;
 		}
 	}
 	
@@ -243,7 +242,7 @@ int main() {
     char modelos[200][200];
     int qtdModelos = 0;
 
-    while (scanf("%s", entrada) != EOF && strcmp(entrada, "FIM") != 0){
+    while (scanf(" %[^\n]", entrada) != EOF && strcmp(entrada, "FIM") != 0){
     	
 	strcpy(modelos[qtdModelos], entrada);
 	qtdModelos++;	
@@ -253,10 +252,10 @@ int main() {
 
     for (int i = 0; i < qtdModelos; i++){
     
-	if (pesquisaBinaria(carros, modelos[i], qtdCarros)){
-		printf ("SIM\n");
-	}else{
+	if (!pesquisaBinaria(carros, modelos[i], qtdCarros)){
 		printf ("NAO\n");
+	}else{
+		printf ("SIM\n");
 	}
     
     } 
