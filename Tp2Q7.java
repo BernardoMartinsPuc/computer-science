@@ -290,39 +290,56 @@ class LeitorCsv{
 
 public class Tp2Q7 {
 
-	public static void bucket(Veiculo carrros[], int n){
+	public static void bucket(Veiculo carros[], int n){
 	
 		int numBaldes = 10;
-		float normalizado = 8.1;
+		double normalizado = 8.1;
 		
-		Veiculo[][]  baldes = new float [10][n];
-		
-	}
+		Veiculo[][]  baldes = new Veiculo[numBaldes][n];
+		int tamanho[] = new int [numBaldes];
+		int pos = 0;
 
-	public static void insercao (){
-	
-		String key;
-		Veiculo tmp = new Veiculo();
-
-		for (int i = 1; i < n; i++){
+		for (int i = 0; i < n; i++){
 		
-			tmp = carro[i];
-			key = carro[i].getMarca();
-			int j = i - 1;
+			Veiculo veiculo = carros[i];
+			int idx = (int) ((veiculo.getCilindradas() / normalizado) * numBaldes);
 			
-			while (j >= 0 && carro[j].getMarca().compareToIgnoreCase(key) > 0){
-		
-				carro[j + 1] = carro[j];
-				j--;
+			if (idx >= numBaldes){
+				idx = numBaldes - 1;	
 			}
 
-			carro[j + 1] = tmp;
-		}	
+			baldes [idx][tamanho[idx]] = veiculo;
+			tamanho[idx]++;
+		}
+
+		for (int k = 0; k < numBaldes; k++){
+
+			for (int i = 1; i < tamanho[k]; i++){
+				
+				Veiculo chave = baldes[k][i];
+				int j = i - 1;
+			
+				while (j >= 0 && baldes[k][j].getCilindradas() > chave.getCilindradas()){
+		
+					baldes[k][j + 1] = baldes [k][j];
+					j--;
+				}
+
+				baldes[k][j + 1] = chave;
+			}		
+		
+			for (int i = 0; i < tamanho[k]; i++){
 	
+				carros[pos] = baldes[k][i];
+				pos++;
+			}
+		}
+
 		for (int i = 0; i < n; i++){
+
+                	System.out.println (carros[i].format());
+                }
 	
-			System.out.println (carro[i].format());
-		}	
 	}
 	
 	public static void main (String []args){
