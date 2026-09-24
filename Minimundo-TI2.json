@@ -1,0 +1,117 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nome": "Ana Silva",
+      "email": "ana.silva@universidade.edu.br",
+      "senha": "123",
+      "tipo": "Aluno"
+    },
+    {
+      "id": 2,
+      "nome": "Carlos Oliveira",
+      "email": "carlos.oliveira@universidade.edu.br",
+      "senha": "123",
+      "tipo": "Monitor"
+    },
+    {
+      "id": 3,
+      "nome": "Administrador do Sistema",
+      "email": "admin@universidade.edu.br",
+      "senha": "123",
+      "tipo": "Administrador"
+    }
+  ],
+  "disciplinas": [
+    {
+      "codigo": "CC001",
+      "nome": "Banco de Dados"
+    },
+    {
+      "codigo": "MAT01",
+      "nome": "Cálculo I"
+    }
+  ],
+  "monitorias": [
+    {
+      "id_monitor": 2,
+      "codigo_disciplina": "CC001"
+    }
+  ],
+  "disponibilidades": [
+    {
+      "id": 1,
+      "id_monitor": 2,
+      "dia_semana": "Segunda-feira",
+      "hora_inicio": "14:00",
+      "hora_termino": "16:00"
+    }
+  ],
+  "agendamentos": [
+    {
+      "id": 1,
+      "id_aluno": 1,
+      "id_monitor": 2,
+      "codigo_disciplina": "CC001",
+      "data": "2026-10-15",
+      "horario": "14:30",
+      "modalidade": "Presencial",
+      "status": "Confirmado",
+      "descricao": "Dúvidas sobre modelagem de dados ER"
+    }
+  ],
+  "tags": [
+    {
+      "id": 1,
+      "id_usuario": 1,
+      "nome": "Provas",
+      "cor": "#FF0000"
+    },
+    {
+      "id": 2,
+      "id_usuario": 1,
+      "nome": "Dúvidas P1",
+      "cor": "#00FF00"
+    }
+  ],
+  "mensagens": [
+    {
+      "id": 1,
+      "id_remetente": 1,
+      "id_destinatario": 2,
+      "texto": "Olá Carlos, vou levar os exercícios da lista para tirar dúvida.",
+      "data_hora": "2026-10-14T10:30:00",
+      "status": "Lida"
+    }
+  ],
+  "arquivos": [
+    {
+      "id": 1,
+      "nome_arquivo": "Lista_Exercicios_SQL.pdf",
+      "url": "/uploads/disciplinas/1/Lista_Exercicios_SQL.pdf",
+      "tipo_arquivo": "application/pdf",
+      "data_envio": "2026-10-10T14:00:00",
+      "id_disciplina": 1,
+      "id_usuario": 2
+    },
+    {
+      "id": 2,
+      "nome_arquivo": "Gabarito_P1.pdf",
+      "url": "/uploads/disciplinas/2/Gabarito_P1.pdf",
+      "tipo_arquivo": "application/pdf",
+      "data_envio": "2026-10-12T09:30:00",
+      "id_disciplina": 2,
+      "id_usuario": 3
+    }
+  ],
+  "notificacoes": [
+    {
+      "id": 1,
+      "id_usuario": 1,
+      "titulo": "Agendamento Confirmado",
+      "mensagem": "Seu agendamento para Banco de Dados foi confirmado pelo monitor.",
+      "data_hora": "2026-10-14T09:00:00",
+      "status": "Lida"
+    }
+  ]
+}
