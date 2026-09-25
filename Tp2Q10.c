@@ -179,39 +179,45 @@ typedef struct {
 	int primeiro, ultimo;
 }FilaCircular;
 
-void inciarFila (filaCircular *f) {
+void construtorFila (FilaCircular *fila) {
 	
-	f -> primeiro = 0;
-	f -> ultimo = 0;
+	fila -> primeiro = 0;
+	fila -> ultimo = 0;
 	
 }
 
-Veiculo desenfileirar(FilaCircular* f) {
+Veiculo desenfileirar(FilaCircular* fila) {
 
-    if (f -> primeiro == f -> ultimo) {
+    if (fila -> primeiro == fila -> ultimo) {
        exit(1);
     }
 
-    Veiculo resp = f->array[f->primeiro];
-    f->primeiro = (f->primeiro + 1) % MAX;
+    Veiculo resp = fila -> filaVeiculos[fila -> primeiro];
+    fila -> primeiro = (fila -> primeiro + 1) % 6;
     return resp;
 }
 
-void enfileirar(FilaCircular* f, Veiculo x) {
+void enfileirar(FilaCircular* fila, Veiculo veiculo) {
    
-    if (isCheia(f)) {
-        Veiculo removido = desenfileirar(f);
-        printf("(R) %s %s\n", removido.marca, removido.modelo);
+    if ((fila -> ultimo + 1) % 6 == fila -> primeiro) {
+
+        Veiculo removido = desenfileirar(fila);
+        printf("(R)%s %s\n", removido.marca, removido.modelo);
     }
-    f->array[f->ultimo] = x;
-    f->ultimo = (f->ultimo + 1) % MAX;
+
+    fila -> filaVeiculos [fila -> ultimo] = veiculo;
+    fila -> ultimo = (fila -> ultimo + 1) % 6;
 }
 
-void mostrarFila(FilaCircular* f) {
-    int i = f->primeiro;
-    while (i != f->ultimo) {
-        imprimirVeiculo(f->array[i]);
-        i = (i + 1) % MAX;
+void mostrarFila(FilaCircular* fila) {
+
+    int i = fila -> primeiro;
+    char res[500];
+
+    while (i != fila -> ultimo) {
+        formatVeiculo (fila -> filaVeiculos[i], res);
+        printf ("%s\n", res);
+        i = (i + 1) % 6;
     }
 }
 
@@ -222,18 +228,54 @@ int main() {
     Veiculo* veiculos = lerCsv("/tmp/veiculos.csv", &totalVeiculos); 
 
     char entrada[100];
-    char res[2048];
+    FilaCircular fila;
+    construtorFila(&fila);
 
-    while (scanf("%s", entrada) != EOF && strcmp(entrada, "FIM") != 0) {
+    while (scanf("%s", entrada) != EOF && atoi(entrada) != -1) {
+
         int id = atoi(entrada);
 
         for (int i = 0; i < totalVeiculos; i++) {
+
             if (veiculos[i].id == id) {
-                formatVeiculo(&veiculos[i], res);
-                printf("%s\n", res);
+            
+                enfileirar(&fila, veiculos[i]);
             }
         }
     }
+
+    int numComando;
+    scanf("%d", &numComando);
+
+    for (int i = 0; i < numComando; i++){
+
+        char comando[20];
+        scanf("%s", comando);
+
+        if (strcmp(comando, "I") == 0){
+
+            int idBusca;
+            scanf("%d", &idBusca);
+
+            for (int idx = 0; idx < totalVeiculos; idx++){
+
+                if (veiculos[idx].id == idBusca){
+
+                    enfileirar(&fila, veiculos[idx]);
+                }
+
+            }
+        }
+
+        if (strcmp(comando, "R") == 0){
+
+                Veiculo removido = desenfileirar(&fila);
+                printf("(R)%s %s\n", removido.marca, removido.modelo);
+        }
+
+    }
+
+    mostrarFila(&fila);
 
     free(veiculos);
 }
