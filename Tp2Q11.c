@@ -179,6 +179,13 @@ typedef struct Celula{
     struct Celula* prox;
 }Celula; 
 
+typedef struct {
+
+    Celula* primeiro;
+    Celula* ultimo;
+
+} ListaEncadeada;
+
 Celula* novaCelula(Veiculo carro){
 
     Celula* nova = (Celula*) malloc (sizeof(Celula));
@@ -188,7 +195,7 @@ Celula* novaCelula(Veiculo carro){
     return nova;
 }
 
-void start (ListaEncadead* lista){
+void construtorEncadeada(ListaEncadeada* lista){
 
     Veiculo cabeca;
     lista -> primeiro = novaCelula(cabeca);
@@ -214,7 +221,7 @@ int tamanho(ListaEncadeada* lista){
 
 void inserirInicio (ListaEncadeada* lista, Veiculo veiculo){
 
-    Celular* tmp = novaCelula(veiculo);
+    Celula* tmp = novaCelula(veiculo);
     tmp -> prox = lista -> primeiro -> prox;
     lista -> primeiro -> prox = tmp;
 
@@ -226,7 +233,7 @@ void inserirInicio (ListaEncadeada* lista, Veiculo veiculo){
     tmp = NULL;
 }
 
-void inserirFim(ListaEncadeada* lista, Veiculo veiculo){
+void inserirFim (ListaEncadeada* lista, Veiculo veiculo){
 
     lista -> ultimo -> prox = novaCelula (veiculo);
     lista -> ultimo = lista -> ultimo -> prox;
@@ -234,41 +241,106 @@ void inserirFim(ListaEncadeada* lista, Veiculo veiculo){
 
 void inserirPos (ListaEncadeada* lista, Veiculo veiculo, int pos){
 
-    int tamanho = tamanho(&lista);
+    int tam = tamanho(lista);
 
-    if (pos < 0 || pos > tamanho){
+    if (pos < 0 || pos > tam){
         exit(1);
 
     } else if (pos == 0){
         inserirInicio (lista, veiculo);
 
-    } else if(pos == tamanho){
-        inserirFim(listra, veiculo);
+    } else if(pos == tam){
+        inserirFim(lista, veiculo);
 
     }else {
 
         Celula* i = lista -> primeiro;
-        for (int j = 0; j < pos){
+        for (int j = 0; j < pos; j++, i = i -> prox);
 
             Celula* tmp = novaCelula(veiculo);
 
             tmp -> prox = i -> prox;
             i -> prox = tmp;
-            tmp = i = NULL;
-        }
-
     }
-
 
 }
 
-typedef struct {
+Veiculo removerInicio(ListaEncadeada* lista){
 
-    Celula *primeiro;
-    Celula *ultimo;
+	if (lista -> primeiro == lista -> ultimo){
+		exit(1);
+	}
 
-}ListaEncadeada;
+	Celula* tmp = lista -> primeiro -> prox;
+	Veiculo resp = tmp -> veiculo;
+	lista -> primeiro -> prox = tmp -> prox;
 
+	if(tmp == lista -> ultimo){
+	
+		lista -> ultimo = lista -> primeiro;
+	}
+
+	free(tmp);
+	return resp;
+}
+
+Veiculo removerFim (ListaEncadeada* lista){
+
+	if (lista -> primeiro == lista -> ultimo){
+		exit(1);
+	}
+
+	Celula* i;
+
+	for (i = lista -> primeiro; i -> prox != lista -> ultimo; i = i -> prox);
+		
+	Veiculo resp = lista -> ultimo -> veiculo;
+	lista -> ultimo = i;
+	free(lista -> ultimo -> prox);
+
+	lista -> ultimo = i;
+	lista -> ultimo -> prox = NULL;
+	return resp;
+}
+
+Veiculo removerPos (ListaEncadeada* lista, int pos){
+	
+	int tam = tamanho(lista);
+
+	if (lista -> primeiro == lista -> ultimo || pos < 0 || pos >= tam) {
+        	exit(1);
+
+    	} else if (pos == 0) {
+
+        	return removerInicio(lista);
+
+    	} else if (pos == tam - 1) {
+
+        	return removerFim(lista);
+
+    	} else {
+		
+		Celula* i = lista -> primeiro;
+		for (int j = 0; j < pos; j++, i = i -> prox);
+
+		Celula* tmp = i -> prox;
+		Veiculo resp = tmp -> veiculo;
+		i -> prox = tmp -> prox;
+
+		free(tmp);
+		return resp;	
+	}	
+}
+
+void mostrarLista (ListaEncadeada* lista){
+
+	char res[500];
+	for (Celula* i = lista -> primeiro -> prox; i != NULL; i = i -> prox){
+		
+		formatVeiculo(&i -> veiculo, res);
+		printf ("%s\n", res);
+	}
+}
 
 int main() {
     
@@ -277,17 +349,87 @@ int main() {
 
     char entrada[100];
     char res[2048];
+    ListaEncadeada lista;
+    construtorEncadeada(&lista);
 
-    while (scanf("%s", entrada) != EOF && strcmp(entrada, "FIM") != 0) {
+
+    while (scanf("%s", entrada) != EOF && atoi(entrada) != -1) {
         int id = atoi(entrada);
 
         for (int i = 0; i < totalVeiculos; i++) {
+
             if (veiculos[i].id == id) {
-                formatVeiculo(&veiculos[i], res);
-                printf("%s\n", res);
+
+                inserirFim(&lista, veiculos[i]);
             }
         }
     }
+	
+    int numComando;
+    scanf("%d", &numComando);
 
+    for (int i = 0; i < numComando; i++){
+
+        char comando[20];
+        scanf("%s", comando);
+
+	if (strcmp (comando, "II") == 0) {
+
+            int idBusca;
+            scanf("%d", &idBusca);
+
+            for (int k = 0; k < totalVeiculos; k++) {
+
+                if (veiculos[k].id == idBusca) {
+
+                    inserirInicio(&lista, veiculos[k]);
+                }
+            }
+
+        } else if (strcmp (comando, "IF") == 0) {
+            int idBusca;
+            scanf("%d", &idBusca);
+            for (int k = 0; k < totalVeiculos; k++) {
+
+                if (veiculos[k].id == idBusca) {
+
+                    inserirFim(&lista, veiculos[k]);
+                }
+            }
+
+        } else if (strcmp(comando, "I*") == 0) {
+
+            int pos, idBusca;
+            scanf("%d %d", &pos, &idBusca);
+
+            for (int k = 0; k < totalVeiculos; k++) {
+
+                if (veiculos[k].id == idBusca) {
+
+                    inserirPos(&lista, veiculos[k], pos);
+                }
+            }
+
+	} else if (strcmp(comando, "RI") == 0) {
+
+            Veiculo removido = removerInicio(&lista);
+            printf("(R)%s %s\n", removido.marca, removido.modelo);
+
+        } else if (strcmp(comando, "RF") == 0) {
+
+            Veiculo removido = removerFim(&lista);
+            printf("(R)%s %s\n", removido.marca, removido.modelo);
+
+        } else if (strcmp(comando, "R*") == 0) {
+
+            int pos;
+            scanf("%d", &pos);
+
+            Veiculo removido = removerPos(&lista, pos);
+            printf("(R)%s %s\n", removido.marca, removido.modelo);
+        }
+    }
+
+    mostrarLista(&lista);
     free(veiculos);
 }
